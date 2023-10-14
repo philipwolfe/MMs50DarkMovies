@@ -1,0 +1,318 @@
+﻿<html>
+<head>
+	<title>M&amp;M's&copy; Dark Chocolate</title>
+</head>
+<style>
+	html, body{ border: 0px;margin: 0px; padding: 0px; height: 100%; font-family:Garamond;}
+	input:focus {outline: none;}
+	.found{position: absolute; opacity: 1.0;}
+	.hidden{position: absolute; opacity: 0.0;}
+</style>
+<script src="scripts/dhtml.js"></script>
+<script src="scripts/answers.js"></script>
+<body style="background-color: black;">
+	<!-- oncontextmenu="return false;"> -->
+<script language="javascript">
+var imgWidth=2976;
+var imgHeight=2228;
+var boxWidth=888;
+var boxHeight=528;
+var widthDif=imgWidth-boxWidth;
+var heightDif=imgHeight-boxHeight;
+var followMouse=true;
+var showingInput=false;
+var currentMovie=null;
+
+function divBox_mousemove(e)
+{
+	if(!followMouse)
+		return;
+
+	var evt = e || window.event;
+	var a = getMouseOffset($('divBox'), evt);
+
+	var percentWidth = Math.round(a.x / boxWidth * widthDif);
+	var percentHeight = Math.round(a.y / boxHeight * heightDif);
+	$('divMain').style.transform = 'translate(-' + percentWidth + 'px, -' + percentHeight + 'px)';
+}
+
+function divBox_click(e)
+{
+	var evt = e || window.event;
+	var el = evt.target || evt.srcElement;
+
+	if(el.id == 'txtInput' || el.id == 'btnInput' || el.id == 'imgInputR')
+	{
+
+	}
+	else if(showingInput)
+	{
+		hideInput();
+	}
+	else if(el.id.startsWith('img') && el.className == 'found')
+	{
+
+	}
+	else
+	{
+		followMouse = false;
+		showingInput = true;
+		var a = getMouseOffset($('divBox'), evt);
+		var input = $('divInput');
+		input.style.display = '';
+		if(a.y + input.offsetHeight > $('divBox').offsetHeight)
+			a.y -= input.offsetHeight;
+		if(a.x + input.offsetWidth > $('divBox').offsetWidth)
+			a.x -= input.offsetWidth;
+		input.style.top = a.y + 'px';
+		input.style.left = a.x +'px';
+		$('txtInput').focus();
+
+		if(el.id != 'imgMain' && el.id.startsWith('img'))
+		{
+			currentMovie = el;
+		}
+	}
+}
+
+function hideInput()
+{
+	$('divInput').style.display = 'none';
+	$('txtInput').style.backgroundColor = '#000000a6';
+	$('txtInput').value = '';
+	followMouse = true;
+	showingInput = false;
+	currentMovie = null;
+}
+
+function btnInput_click(e)
+{
+	checkSearch();
+	var evt = e || window.event;
+	evt.stopPropagation();
+}
+
+function txtInput_keypress(e)
+{
+	var evt = e || window.event;
+	if(evt.key == "Enter")
+	{
+		checkSearch();
+	}
+}
+
+function checkSearch()
+{
+	if(currentMovie != null)
+	{
+		var idx = parseInt(currentMovie.id.substr(3));
+		var search = $('txtInput').value;
+		if(answerMatrix[idx].some((x) => x.toLowerCase() == search.toLowerCase()))
+		{
+			currentMovie.className = 'found';
+			$('txtInput').style.backgroundColor = '#00bb00a6';
+			addToList(answerMatrix[idx][0]);
+			setTimeout(hideInput, 500);
+		}
+		else
+		{
+			$('txtInput').style.backgroundColor = '#bb0000a6';
+			setTimeout(txtInput_resetcolor, 500);
+		}
+	}
+	else
+	{
+		$('txtInput').style.backgroundColor = '#bb0000a6';
+		setTimeout(txtInput_resetcolor, 500);
+	}
+}
+
+function txtInput_resetcolor()
+{
+	$('txtInput').style.backgroundColor = '#000000a6';
+}
+
+function addToList(s)
+{
+	itemPlaced=false;
+	var list = $('list1');
+	for(var i = 0; i < list.childNodes.length; i++)
+	{
+		var el = list.childNodes[i];
+		if(el.nodeType == 1 && el.innerText == '')
+		{
+			el.innerText = s;
+			itemPlaced = true;
+			break;
+		}
+	}
+
+	if(!itemPlaced)
+	{
+		var list = $('list2');
+		for(var i = 0; i < list.childNodes.length; i++)
+		{
+			var el = list.childNodes[i];
+			if(el.nodeType == 1 && el.innerText == '')
+			{
+				el.innerText = s;
+				break;
+			}
+		}
+	}
+}
+
+function toggleSound(e)
+{
+	var audio = $('audSound');
+	
+	if(audio.paused)
+	{
+		audio.play();
+	}
+	else
+	{
+		audio.pause();
+	}
+}
+	</script>
+	<div style="height: 100%; width: 100%;">
+		<div style="position: absolute; top: 50%; left: 50%; transform:translate(-700px, -50%); width: 200px; color: white;">
+			<ol id="list1">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ol>
+		</div>
+		<div style="position: absolute; top: 50%; left: 50%; transform:translate(500px, -50%); width: 200px; color: white;">
+			<ol start="26" id="list2">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ol>
+		</div>
+		<div style="position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%);width: 949px;">
+			<img src="images/mmspresents.png" style="position: absolute; z-index: 2; top: -9px; left: 225px;">
+			<img src="images/50darkmovies.png" style="position: absolute; z-index: 2; top: -23px; left: 478px;">
+			<img src="images/mdark2.gif" style="position: absolute; z-index: 2; top: -47px; left: 397px;" />
+			<a href="https://www.mms.com" target="_blank"><img src="images/mms.com.png" style="position: absolute; z-index: 1; top: 21px; left: 60px;" /></a>
+			<audio controls muted loop autoplay id="audSound" style="position: absolute; z-index: 1; top: 606px; left: 647px;">
+				<source src="sounds/1_bgLoop42.mp3" type="audio/mpeg" />
+			</audio>
+			<div style="width: 948px; height: 630px; background-image: url('images/background.jpg');">
+				<div style="width: 888px; height: 528px; position: relative; z-index:5; top: 50%; left: 50%; transform: translate(-50%, -50%); overflow: clip;"
+					 onmousemove="javascript:divBox_mousemove(event);" id="divBox"
+					 onclick="javascript:divBox_click(event);">
+					<span id="divInput" style="display: none; position: absolute; z-index: 10;">
+						<img src="images/inputL.png" style="z-index: 2;position: absolute;">
+						<input type="text" style="background-color: #000000a6;color: white;width: 200;position: relative;left: 18;top: -9px;padding-left: 7px;border-top: 2px solid #b3927399;border-bottom: 2px solid #b3927399;margin: 0;border-left:0px;border-right:0px;height: 19px;" id="txtInput" onkeypress="javascript:txtInput_keypress(event);" />
+						<img src="images/inputButton.png" style="position:relative;z-index:2;top: -6px;left: -4px;" id="btnInput" onclick="javascript:btnInput_click(event);">
+						<img src="images/inputR.png" style="z-index: 3;position: relative;left: -26px;" id="imgInputR" onclick="javascript:btnInput_click(event);">
+					</span>
+					<div id="divMain" style="transform: translate(-103px, -573px);">
+						<img id="imgMain" src="images/main.jpg" />
+						<img id="img0" src="movies/0.png" style="z-index: 1;  top: 1257; left: 311" class="hidden">
+						<img id="img1" src="movies/1.png" style="z-index: 1;  top: 1031; left: 1117" class="hidden">
+						<img id="img2" src="movies/2.png" style="z-index: 1;  top: 2011; left: 2091" class="hidden">
+						<img id="img3" src="movies/3.png" style="z-index: 1;  top: 472; left: 2548" class="hidden">
+						<img id="img4" src="movies/4.png" style="z-index: 1;  top: 1666; left: 372" class="hidden">
+						<img id="img5" src="movies/5.png" style="z-index: 3;  top: 1159; left: 871" class="hidden">
+						<img id="img6" src="movies/6.png" style="z-index: 2;  top: 1310; left: 1332" class="hidden">
+						<img id="img7" src="movies/7.png" style="z-index: 1;  top: 255; left: 2578" class="hidden">
+						<img id="img8" src="movies/8.png" style="z-index: 1;  top: 1616; left: 2381" class="hidden">
+						<img id="img9" src="movies/9.png" style="z-index: 2;  top: 819; left: 1602" class="hidden">
+						<img id="img10" src="movies/10.png" style="z-index: 2;  top: 1813; left: 965" class="hidden">
+						<img id="img11" src="movies/11.png" style="z-index: 2;  top: 1896; left: 1394" class="hidden">
+						<img id="img12" src="movies/12.png" style="z-index: 2;  top: 1863; left: 2657" class="hidden">
+						<img id="img13" src="movies/13.png" style="z-index: 1;  top: 819; left: 1737" class="hidden">
+						<img id="img14" src="movies/14.png" style="z-index: 1;  top: 1215; left: 1373" class="hidden">
+						<img id="img15" src="movies/15.png" style="z-index: 2;  top: 714; left: 217" class="hidden" />
+						<img id="img16" src="movies/16.png" style="z-index: 4;  top: 1283; left: 1123" class="hidden" />
+						<img id="img17" src="movies/17.png" style="z-index: 1;  top: 1208; left: 79" class="hidden" />
+						<img id="img18" src="movies/18.png" style="z-index: 1;  top: 968; left: 1670" class="hidden" />
+						<img id="img19" src="movies/19.png" style="z-index: 1;  top: 1176; left: 2419" class="hidden" />
+						<img id="img20" src="movies/20.png" style="z-index: 1;  top: 1671; left: 2704" class="hidden" />
+						<img id="img21" src="movies/21.png" style="z-index: 1;  top: 1877; left: 1973" class="hidden" />
+						<img id="img22" src="movies/22.png" style="z-index: 1;  top: 952; left: 1026" class="hidden" />
+						<img id="img23" src="movies/23.png" style="z-index: 1;  top: 827; left: 1536" class="hidden" />
+						<img id="img24" src="movies/24.png" style="z-index: 1;  top: 1565; left: 1967" class="hidden" />
+						<img id="img25" src="movies/25.png" style="z-index: 1;  top: 1292; left: 194" class="hidden" />
+						<img id="img26" src="movies/26.png" style="z-index: 2;  top: 1052; left: 2658" class="hidden" />
+						<img id="img27" src="movies/27.png" style="z-index: 2;  top: 623; left: 2473" class="hidden" />
+						<img id="img28" src="movies/28.png" style="z-index: 1;  top: 886; left: 1120" class="hidden" />
+						<img id="img29" src="movies/29.png" style="z-index: 2;  top: 1148; left: 750" class="hidden" />
+						<img id="img30" src="movies/30.png" style="z-index: 2;  top: 1185; left: 1626" class="hidden" />
+						<img id="img31" src="movies/31.png" style="z-index: 1;  top: 133; left: 178" class="hidden" />
+						<img id="img32" src="movies/32.png" style="z-index: 1;  top: 2088; left: 39" class="hidden" />
+						<img id="img33" src="movies/33.png" style="z-index: 1;  top: 206; left: 2734" class="hidden" />
+						<img id="img34" src="movies/34.png" style="z-index: 1;  top: 983; left: 196" class="hidden" />
+						<img id="img35" src="movies/35.png" style="z-index: 1;  top: 553; left: 1628" class="hidden" />
+						<img id="img36" src="movies/36.png" style="z-index: 1;  top: 428; left: 654" class="hidden" />
+						<img id="img37" src="movies/37.png" style="z-index: 1;  top: 802; left: 2152" class="hidden" />
+						<img id="img38" src="movies/38.png" style="z-index: 1;  top: 1873; left: 2206" class="hidden" />
+						<img id="img39" src="movies/39.png" style="z-index: 2;  top: 1093; left: 1265" class="hidden" />
+						<img id="img40" src="movies/40.png" style="z-index: 1;  top: 1518; left: 1563" class="hidden" />
+						<img id="img41" src="movies/41.png" style="z-index: 2;  top: 1573; left: 1295" class="hidden" />
+						<img id="img42" src="movies/42.png" style="z-index: 1;  top: 1229; left: 2113" class="hidden" />
+						<img id="img43" src="movies/43.png" style="z-index: 1;  top: 1368; left: 1736" class="hidden" />
+						<img id="img44" src="movies/44.png" style="z-index: 1;  top: 1748; left: 1682" class="hidden" />
+						<img id="img45" src="movies/45.png" style="z-index: 1;  top: 710; left: 418" class="hidden" />
+						<img id="img46" src="movies/46.png" style="z-index: 2;  top: 1781; left: 2509" class="hidden" />
+						<img id="img47" src="movies/47.png" style="z-index: 1;  top: 175; left: 866" class="hidden" />
+						<img id="img48" src="movies/48.png" style="z-index: 1;  top: 97; left: 1449" class="hidden" />
+						<img id="img49" src="movies/49.png" style="z-index: 3;  top: 1339; left: 576" class="hidden" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--
+	https://www.reddit.com/r/horror/comments/52mmdm/its_been_10_years_since_mms_50_dark_movies_hidden/
+	https://www.reddit.com/r/lostmedia/comments/qg4efj/mms_50_dark_movies_hidden_in_a_painting_game/
+	https://web.archive.org/web/20070922194741/http://www.mms.com/us/dark/dark_game.jsp-->
+</body>
+</html>
